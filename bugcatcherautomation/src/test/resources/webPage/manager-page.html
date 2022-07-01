@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>manager-page</title>
+</head>
+<body>
+    <h1>Welcom Mr/Mss Manager</h1>
+    <p>create defect here:</p>
+    <input type="text" placeholder="defect name" id="defect" >
+    <br>
+    <p>assign tester for the above defect:</p>
+    <input type="text" placeholder="tester name" id="tname">
+    <br>
+    <button id = "assignBt" onclick="assignTo()">Assign</button>
+</body>
+
+<script>
+    async function assignTo(){
+        
+        
+            let defectInfo={
+                    "defectId": 27979,
+                    "assignedTo": document.getElementById("tname").value,
+                    "dateReported": 0,
+                    "status": "Pending",
+                    "desc": document.getElementById("defect").value,
+                    "stepsToReproduce": "string",
+                    "severity": "Low",
+                    "priority": "Low"
+                 }
+             
+    let defectJSON = JSON.stringify(defectInfo);
+        let config = {
+            method:"POST", 
+            headers:{'Content-Type':"application/json"}, 
+            body: defectJSON
+        }
+
+        let httpResponse = await fetch("https://bugcatcher.coe.revaturelabs.com/24/defects", config); 
+        console.log(httpResponse);
+        if(httpResponse.status === 201){ 
+            alert("Tester successfully assigned to Defect")
+            let responseBody = await httpResponse.json();
+            console.log(responseBody)
+        }
+
+    }
+
+</script>
+</html>

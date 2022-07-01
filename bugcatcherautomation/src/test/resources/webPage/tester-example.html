@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <title>Tester Page</title>
+    
+</head>
+<body onload="defectone()">
+
+    
+<table border ="1" id="table1">
+    
+<table border ="1" id="defects">
+
+</table>
+
+</table>
+
+</body>
+
+<script>
+    async function submit(defectId){
+        
+        let newStatus = {
+            
+        status: document.getElementById(`select${defectId}`).value
+        
+        }
+        let statusJSON = JSON.stringify(newStatus);
+
+        let config = {
+            method:"PATCH", 
+            headers:{'Content-Type':"application/json"},
+            body: statusJSON
+        }
+
+        let httpResponse = await fetch(`https://bugcatcher.coe.revaturelabs.com/24/defects/${defectId}`,config); // make sure to enter the url assigned to you
+
+        if(httpResponse.status === 204){ // 200 basically means request made successfully
+            //let responseBody = await httpResponse.json(); // remember, json() returns a promise, so we use await to get the data we want out of it
+            defects.innerHTML="";
+            defectone();
+        } else {
+            let responseBody = await httpResponse.json(); 
+            alert(responseBody.detail);
+        }
+
+        
+    };
+
+
+
+    const mydef = "use456"
+    const dId = 53992
+    const table1=document.getElementById("table1");
+    const defects=document.getElementById("defects");
+
+    async function defectone(){
+        table1.innerHTML= 
+        `<tr>
+            <th>DefectID</th>
+            <th>Defect Name</th>
+            <th>CrentStatus</th>
+            <th>Update Status</th>
+            
+            <th>Submit</th>
+        </tr>`
+
+        
+     let httpResponse = await fetch("https://bugcatcher.coe.revaturelabs.com/24/defects")
+     if(httpResponse.status === 200){
+        let responseBody = await httpResponse.json();
+        
+        for(let defect of responseBody){
+            if(mydef === defect.assignedTo ){
+                console.log(defect)
+                let node = document.createElement("tr");
+
+
+                node.innerHTML = `<tr><td id="test">${defect['defectId']}</td><td>
+            ${defect['desc']}
+            </td>
+            <td>
+                ${defect.status}
+                </td>
+            <td>
+                <select class="acceptDecline" id="select${defect.defectId}">
+                    <option  id="a" value="">Select One</option>
+                    <option id="b" value="Accepted">Accept</option>
+                    <option id="c" value="Declined">Decline</option>
+
+                     <option  id="w" value="">Select One</option>
+                    <option id="x" value="Fixed">Fix</option>
+                    <option id="y" value="Rejected">Rejected</option>
+                    <option id="z" value="Shelved">Shelved</option>
+                </select>
+            </td>
+            <td>
+    
+             <button id="pendingsubmitbutton" onclick="submit(${defect.defectId})">submit</button>
+
+            </td> </tr>`
+            table1.appendChild(node)
+            
+            }           
+            }
+            async function myfan(){
+            let submitDefectInfo={
+            status: Pending
+         }
+            let submitDefectJSON = JSON.stringify(submitDefectInfo)
+               let config = {
+                        method:"PATCH", 
+                        headers:{'Content-Type':"application/json"}, 
+                        body: submitDefectJSON
+                     }
+                     let httpResponse = await fetch(`https://bugcatcher.coe.revaturelabs.com/24/defects/${id}`, config)
+                     console.log(httpResponse);
+                     if(httpResponse.status === 204){
+                        alert("It's updated")
+                     }else{
+                        alert("you need to do more")
+                     }
+                    }
+               /* async function updateDefect(){
+
+                let updateDefectInfo={
+                    status: status.options[status.selectedIndex].value
+
+                }
+            let updateDefectJSON=JSON.stringify(updateDefectInfo);
+                let config={
+                method: "PACTH",
+                headers:{'Content-Type':"application/json"}, 
+                body: updateDefectJSON
+
+                }
+                let httpResponse = await fetch(`https://bugcatcher.coe.revaturelabs.com/24/defects/${defectId.options[status.selectIndex].value}`,config)
+                }*/
+
+                
+                    }
+                }
+
+            
+
+</script>
+</html>
